@@ -1,0 +1,106 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.bobbi.weatherandroidapp"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
+    buildTypes {
+        debug {
+            // Minifying the variant used for tests is not supported when using Jack.
+            minifyEnabled false
+            // Uses new built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Dagger dependencies
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+
+    // Retrofit
+    compile("com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion") {
+        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+        exclude module: 'okhttp'
+    }
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
+    compile "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
+
+    // JSON Converter
+    compile "com.fasterxml.jackson.core:jackson-core:$rootProject.jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$rootProject.jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$rootProject.jacksonVersion"
+
+    // Butterknife
+    compile 'com.jakewharton:butterknife:7.0.1'
+    // Logging
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    // Image Utils
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // SQL
+    compile "com.squareup.sqlbrite:sqlbrite:$rootProject.sqlbriteVersion"
+
+    // Reactive Programming
+    compile "io.reactivex:rxjava:$rootProject.rxjavaVersion"
+    compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion"
+
+    // Lombok
+    provided "org.projectlombok:lombok:$rootProject.lombokVersion"
+    apt "org.projectlombok:lombok:$rootProject.lombokVersion"
+
+    // Eventbuss
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile "junit:junit:$rootProject.junitVersion";
+}
